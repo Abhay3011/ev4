@@ -39,4 +39,6 @@ def video_metadata(file):
     data = {'width' : width, 'height' : height, 'duration' : duration }
     return width, height, fps, frame_count, duration, data
     video.release() 
-    result.release()
+    cap.release()
+    cv2.videoCapture.release()
+    vcap.repease()
