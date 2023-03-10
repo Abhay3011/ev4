@@ -41,4 +41,4 @@ def video_metadata(file):
     video.release() 
     cap.release()
     cv2.videoCapture.release()
-    vcap.repease()
+    vcap.release()
