@@ -43,29 +43,6 @@ def open_video(video_path: Union[Path, str], mode: str='r', *args):
     if not video.isOpened(): raise ValueError(f'Video {video_path} is not opened!')
     try:
         yield video
-    finally:
-        video.release()
-
-def frames(video: Union[Path, cv2.VideoCapture], rgb: bool=False) -> Iterable[np.ndarray]:
-    '''Generator of frames of the video provided
-    Args:
-        video: either Path or Video capture to read frames from
-            in former case file will be opened with :py:funct:`.open_video`
-        rgb: if True returns RGB image, else BGR - native to opencv format
-    Yields:
-        Frames of video
-    '''
-    if isinstance(video, Path):
-        with open_video(video) as capture:
-            yield from frames(capture, rgb)
-    else:
-        while True:
-            retval, frame = video.read()
-            if not retval:
-                break
-            if rgb:
-                frame = frame[:, :, ::-1]
-            yield frame
 
 #fastest way to get total number of frames in a video
 def total_frames(video_path):
