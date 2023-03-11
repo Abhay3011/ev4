@@ -37,14 +37,6 @@ def video_metadata(file):
     fps = vcap.get(cv2.CAP_PROP_FPS),
     frame_count = vcap.get(cv2.CAP_PROP_FRAME_COUNT)
     duration = round(frame_count / fps)
-    data = {'width' : width, 'height' : height, 'duration' : duration }
-    return {
-            'width': video.get(cv2.CAP_PROP_FRAME_WIDTH),
-            'height': video.get(cv2.CAP_PROP_FRAME_HEIGHT),
-            'fps': video.get(cv2.CAP_PROP_FPS),
-            'fourcc': video.get(cv2.CAP_PROP_FOURCC),
-            'frame_count': video.get(cv2.CAP_PROP_FRAME_COUNT),
-            }
-
-    
-           
+    data = {'width' : width, 'height' : height, 'fps' : fps, 'frame_count' : frame_count, 'duration' : duration }
+    return data
+    cap.release()
