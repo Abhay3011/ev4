@@ -1,19 +1,71 @@
-"""This file is part of the ethon distribution.
-Copyright (c) 2021 vasusen-code
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, version 3.
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-General Public License for more details.
-License can be found in < https://github.com/vasusen-code/ethon/blob/main/LICENSE > ."""
-
 #vasusen-code/thechariotoflight/dronebots
 #__TG:ChauhanMahesh__
 
-import subprocess 
+from typing import Union
+from contextlib import contextmanager
+from pathlib import Path
+try:
+    from collections.abc import Iterable
+except ImportError:
+    from collections import Iterable
+
+import numpy as np
 import cv2
+import subprocess
+
+@contextmanager
+def open_video(video_path: Union[Path, str], mode: str='r', *args):
+    '''Context manager to work with cv2 videos
+        Mimics python's standard `open` function
+    Args:
+        video_path: path to video to open
+        mode: either 'r' for read or 'w' write
+        args: additional arguments passed to Capture or Writer
+            according to OpenCV documentation
+    Returns:
+        cv2.VideoCapture or cv2.VideoWriter depending on mode
+    Example of writing:
+        open_video(
+            out_path,
+            'w',
+            cv2.VideoWriter_fourcc(*'XVID'), # fourcc
+            15, # fps
+            (width, height), # frame size
+        )
+    '''
+    video_path = Path(video_path)
+    if mode == 'r':
+        video = cv2.VideoCapture(video_path.as_posix(), *args)
+    elif mode == 'w':
+        video = cv2.VideoWriter(video_path.as_posix(), *args)
+    else:
+        raise ValueError(f'Incorrect open mode "{mode}"; "r" or "w" expected!')
+    if not video.isOpened(): raise ValueError(f'Video {video_path} is not opened!')
+    try:
+        yield video
+    finally:
+        video.release()
+
+def frames(video: Union[Path, cv2.VideoCapture], rgb: bool=False) -> Iterable[np.ndarray]:
+    '''Generator of frames of the video provided
+    Args:
+        video: either Path or Video capture to read frames from
+            in former case file will be opened with :py:funct:`.open_video`
+        rgb: if True returns RGB image, else BGR - native to opencv format
+    Yields:
+        Frames of video
+    '''
+    if isinstance(video, Path):
+        with open_video(video) as capture:
+            yield from frames(capture, rgb)
+    else:
+        while True:
+            retval, frame = video.read()
+            if not retval:
+                break
+            if rgb:
+                frame = frame[:, :, ::-1]
+            yield frame
 
 #fastest way to get total number of frames in a video
 def total_frames(video_path):
