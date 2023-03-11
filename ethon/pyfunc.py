@@ -44,8 +44,7 @@ def video_metadata(file):
             'fps': video.get(cv2.CAP_PROP_FPS),
             'fourcc': video.get(cv2.CAP_PROP_FOURCC),
             'frame_count': video.get(cv2.CAP_PROP_FRAME_COUNT),
-            'real_frame_count': real_frame_count,
-        }
+            }
 
     
            
