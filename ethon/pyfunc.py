@@ -20,25 +20,32 @@ def total_frames(video_path):
     cap = cv2.VideoCapture(f"{video_path}")
     tf = int(cap.get(cv2.CAP_PROP_FRAME_COUNT)) 
     return tf        
-
+    
 #makes a subprocess handy
 def bash(cmd):    
     bashCommand = f"{cmd}"
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE) 
     output, error = process.communicate()
     return output, error
-
+    
 #to get width, height and duration(in sec) of a video
 def video_metadata(file):
+    with open_video(video_path) as video:
     vcap = cv2.VideoCapture(f'{file}')  
-    width = round(vcap.get(cv2.CAP_PROP_FRAME_WIDTH )),
-    height = round(vcap.get(cv2.CAP_PROP_FRAME_HEIGHT )),
+    width = round(vcap.get(cv2.CAP_PROP_FRAME_WIDTH ))
+    height = round(vcap.get(cv2.CAP_PROP_FRAME_HEIGHT ))
     fps = vcap.get(cv2.CAP_PROP_FPS),
-    frame_count = vcap.get(cv2.CAP_PROP_FRAME_COUNT),
-    duration = round(frame_count / fps),
-    data = {'width' : width, 'height' : height, 'duration' : duration },
-    return width, height, fps, frame_count, duration, data
-    video.release() 
-    cap.release()
-    cv2.videoCapture.release()
-    vcap.release()
+    frame_count = vcap.get(cv2.CAP_PROP_FRAME_COUNT)
+    duration = round(frame_count / fps)
+    data = {'width' : width, 'height' : height, 'duration' : duration }
+    return {
+            'width': video.get(cv2.CAP_PROP_FRAME_WIDTH),
+            'height': video.get(cv2.CAP_PROP_FRAME_HEIGHT),
+            'fps': video.get(cv2.CAP_PROP_FPS),
+            'fourcc': video.get(cv2.CAP_PROP_FOURCC),
+            'frame_count': video.get(cv2.CAP_PROP_FRAME_COUNT),
+            'real_frame_count': real_frame_count,
+        }
+
+    
+           
