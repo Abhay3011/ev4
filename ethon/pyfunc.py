@@ -30,7 +30,6 @@ def bash(cmd):
     
 #to get width, height and duration(in sec) of a video
 def video_metadata(file):
-    with open_video(video_path) as video:
     vcap = cv2.VideoCapture(f'{file}')  
     width = round(vcap.get(cv2.CAP_PROP_FRAME_WIDTH ))
     height = round(vcap.get(cv2.CAP_PROP_FRAME_HEIGHT ))
