@@ -1,2 +1,3 @@
-Project Completed
-All credit goes to original developer \ni have just made some changes
+Project Completed Successfully
+All credit goes to original developer,
+I have just made some changes....
